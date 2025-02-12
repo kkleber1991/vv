@@ -6,9 +6,9 @@
             <p class="text-lg text-gray-600 dark:text-gray-400">Encontre o plano perfeito para suas necessidades</p>
         </div>
 
-        <!-- Grid de Planos -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            @foreach($plans as $plan)
+        <!-- Grid de Planos Principais -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            @foreach($plans->where('price', '>', 0) as $plan)
             <div class="relative">
                 @if($plan->is_popular)
                 <div class="absolute -top-4 left-0 right-0 text-center">
@@ -92,5 +92,53 @@
             </div>
             @endforeach
         </div>
+
+        <!-- Plano Free -->
+        @foreach($plans->where('price', 0) as $plan)
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
+                <div class="flex flex-col md:flex-row md:items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center mb-4 md:mb-0">
+                            <h3 class="text-2xl font-semibold text-red-600 mr-4">{{ $plan->name }}</h3>
+                            <span class="text-3xl font-bold text-gray-900 dark:text-white">R$ {{ number_format($plan->price, 2, ',', '.') }}</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                            @if($plan->max_ads > 0)
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-600 dark:text-gray-300">{{ $plan->max_ads }} {{ Str::plural('Anúncio', $plan->max_ads) }}</span>
+                            </div>
+                            @endif
+
+                            @if($plan->max_photos > 0)
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-600 dark:text-gray-300">Até {{ $plan->max_photos }} fotos</span>
+                            </div>
+                            @endif
+
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                <span class="text-gray-600 dark:text-gray-300">Anúncio na listagem padrão</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6 md:mt-0 md:ml-8">
+                        <a href="{{ route('register', ['plan' => $plan->slug]) }}"
+                           class="inline-block px-8 py-3 bg-white border-2 border-red-600 text-red-600 font-semibold rounded-lg hover:bg-red-50 transition duration-150">
+                            Começar Grátis
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
 </div> 
