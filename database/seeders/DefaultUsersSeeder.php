@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Plan;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DefaultUsersSeeder extends Seeder
 {
@@ -16,23 +17,37 @@ class DefaultUsersSeeder extends Seeder
         $planVip = Plan::where('name', 'VIP')->first();
         $planPremium = Plan::where('name', 'Premium')->first();
 
-        // Criar usuário Admin
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('killbill1020'),
-            'email_verified_at' => now(),
-            'plan_id' => $planVip->id,
-        ])->assignRole('admin');
+        // Cria o papel de admin se não existir
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $acompanhanteRole = Role::firstOrCreate(['name' => 'acompanhante']);
 
-        // Criar usuário Acompanhante
-        User::create([
-            'name' => 'Acompanhante',
-            'email' => 'acompanhante@gmail.com',
-            'password' => Hash::make('killbill1020'),
-            'email_verified_at' => now(),
-            'plan_id' => $planPremium->id,
-        ])->assignRole('acompanhante');
+        // Cria o usuário admin
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Administrador',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'plan_id' => $planVip->id,
+            ]
+        );
+
+        // Atribui o papel de admin
+        $admin->assignRole($adminRole);
+
+        // Cria um usuário acompanhante de teste
+        $acompanhante = User::firstOrCreate(
+            ['email' => 'acompanhante@test.com'],
+            [
+                'name' => 'Acompanhante Teste',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+                'plan_id' => $planPremium->id,
+            ]
+        );
+
+        // Atribui o papel de acompanhante
+        $acompanhante->assignRole($acompanhanteRole);
 
         // Criar usuário Cliente
         User::create([

@@ -83,10 +83,24 @@
                     </div>
 
                     <div class="p-8 mt-auto">
-                        <a href="{{ route('register', ['plan' => $plan->slug]) }}"
-                           class="block w-full text-center px-6 py-3 rounded-lg {{ $plan->is_popular ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700' }} text-white font-semibold transition duration-150">
-                            {{ $plan->price > 0 ? ($plan->is_popular ? 'Escolher Premium' : ($plan->name === 'VIP' ? 'Seja VIP' : 'Começar Agora')) : 'Começar Grátis' }}
-                        </a>
+                        @auth
+                            @if(auth()->user()->hasRole('acompanhante'))
+                                <a href="{{ route('plans.subscribe.form', $plan) }}"
+                                   class="block w-full text-center px-6 py-3 rounded-lg {{ $plan->is_popular ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700 border-solid border-2 border-red-700' }} text-white font-semibold transition duration-150">
+                                    {{ $plan->price > 0 ? ($plan->is_popular ? 'Escolher Premium' : ($plan->name === 'VIP' ? 'Seja VIP' : 'Começar Agora')) : 'Começar Grátis' }}
+                                </a>
+                            @else
+                                <button disabled
+                                        class="block w-full text-center px-6 py-3 rounded-lg bg-gray-400 text-white font-semibold cursor-not-allowed">
+                                    Apenas para Acompanhantes
+                                </button>
+                            @endif
+                        @else
+                            <a href="{{ route('register', ['plan' => $plan->slug]) }}"
+                               class="block w-full text-center px-6 py-3 rounded-lg {{ $plan->is_popular ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700 border-solid border-2 border-red-700' }} text-white font-semibold transition duration-150">
+                                Cadastre-se
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>

@@ -108,4 +108,14 @@ class Anuncio extends Model
     {
         return $query->where('status', 'ativo');
     }
+
+    public function fotos()
+    {
+        return $this->hasMany(AnuncioFoto::class);
+    }
+
+    public function videos()
+    {
+        return $this->hasMany(AnuncioVideo::class);
+    }
 } 

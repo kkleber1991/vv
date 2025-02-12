@@ -265,6 +265,52 @@
                         @error('atende') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                     </div>
 
+                    <!-- Seção de Upload de Fotos -->
+                    <div class="mt-8">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Fotos e Vídeos</h3>
+                        
+                        <!-- Foto Principal -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                Foto Principal
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-1 flex items-center">
+                                <div class="flex-shrink-0">
+                                    @if ($foto_principal)
+                                        <img src="{{ $foto_principal->temporaryUrl() }}" 
+                                             class="h-32 w-32 object-cover rounded-lg">
+                                    @elseif ($isEditing && $currentAnuncio && $currentAnuncio->foto_principal)
+                                        <img src="{{ Storage::url($currentAnuncio->foto_principal) }}" 
+                                             class="h-32 w-32 object-cover rounded-lg">
+                                    @else
+                                        <div class="h-32 w-32 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+                                            <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="ml-4">
+                                    <div class="flex items-center">
+                                        <label class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
+                                            <span>Upload foto</span>
+                                            <input type="file" wire:model="foto_principal" class="sr-only" accept="image/*">
+                                        </label>
+                                    </div>
+                                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                        PNG, JPG até 2MB
+                                    </p>
+                                    @error('foto_principal')
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fotos Adicionais -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <!-- Botões de Ação -->
                     <div class="flex justify-end space-x-3">
                         @if($isEditing)
@@ -331,7 +377,7 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex justify-end space-x-2">
-                                            <button wire:click="edit({{ $anuncio->id }})"
+                                            <button wire:click.prevent="edit({{ $anuncio->id }})"
                                                     class="text-primary hover:text-primary-dark">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 

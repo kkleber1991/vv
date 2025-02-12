@@ -72,4 +72,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Plan::class);
     }
+
+    /**
+     * Get the user's announcements.
+     */
+    public function anuncios()
+    {
+        return $this->hasMany(Anuncio::class);
+    }
 }

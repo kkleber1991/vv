@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogController;
 use App\Livewire\Admin\Posts;
 use App\Livewire\Anuncios\GerenciarAnuncios;
 use App\Http\Controllers\AnuncioController;
+use App\Http\Controllers\PlanSubscriptionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -37,6 +38,12 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/admin/plans', App\Livewire\Admin\Plans\ManagePlans::class)
         ->middleware('can:manage plans')
         ->name('admin.plans');
+
+    // Rotas de assinatura de planos
+    Route::get('/planos/{plan}/assinar', [PlanSubscriptionController::class, 'showSubscriptionForm'])
+        ->name('plans.subscribe.form');
+    Route::post('/planos/{plan}/assinar', [PlanSubscriptionController::class, 'subscribe'])
+        ->name('plans.subscribe');
 });
 
 // Rotas públicas
@@ -50,3 +57,6 @@ Route::get('/anuncios-disponiveis', [AnuncioController::class, 'index'])
 
 // Rotas de planos
 Route::get('/planos', App\Livewire\Plans\ShowPlans::class)->name('plans.index');
+
+// Dentro do grupo de rotas públicas
+Route::get('/anuncios/{slug}', [AnuncioController::class, 'show'])->name('anuncios.show');
