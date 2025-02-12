@@ -1,4 +1,8 @@
-#Instalação de dependências
+#Copiar .env
+run:
+  command: cp .env.example .env
+  
+#Instalação de dependências  
 dependencies:
   composer:
     - install
