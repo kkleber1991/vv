@@ -10,14 +10,33 @@ export default {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
     ],
-
+    darkMode: 'class',
     theme: {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                playfair: ['"Playfair Display"', 'serif']
             },
+            colors: {
+                primary: '#ed1b24',
+                'primary-dark': '#d41920',
+            },
+            animation: {
+                'gradient': 'gradient 8s linear infinite',
+            },
+            keyframes: {
+                gradient: {
+                    '0%, 100%': {
+                        'background-size': '200% 200%',
+                        'background-position': 'left center'
+                    },
+                    '50%': {
+                        'background-size': '200% 200%',
+                        'background-position': 'right center'
+                    }
+                }
+            }
         },
     },
-
     plugins: [forms, typography],
 };
