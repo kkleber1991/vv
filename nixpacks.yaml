@@ -1,9 +1,0 @@
-#Instalação de dependências
-depencencies:
-  composer:
-    - install
-  npm:
-    - install
-#Especificando como gerar a key
-run:
-  command: php artisan key:generate
