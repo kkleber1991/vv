@@ -1,0 +1,7 @@
+depencencies:
+  composer:
+    - install
+  npm:
+    - install
+run:
+  command: php artisan key:generate
