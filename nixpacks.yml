@@ -1,7 +1,3 @@
-#Copiar .env
-run:
-  command: cp .env.example .env
-  
 #Instalação de dependências  
 dependencies:
   composer:
@@ -11,8 +7,10 @@ dependencies:
 
 #Especificando como gerar a key
 run:
-  command: cp .env.example .env
-  command: php artisan key:generate
+  - command: cp .env.example .env
+  - command: ls -la  # Verificar se o arquivo .env foi copiado corretamente
+  - command: php artisan key:generate
+
 #Configurar .env
 env:
   APP_KEY: ${APP_KEY}
