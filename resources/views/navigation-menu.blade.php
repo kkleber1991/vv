@@ -16,12 +16,6 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
-                    @can('manage plans')
-                        <x-nav-link href="{{ route('admin.plans') }}" :active="request()->routeIs('admin.plans')">
-                            {{ __('Gerenciar Planos') }}
-                        </x-nav-link>
-                    @endcan
-                    
                     @can('criar anuncios')
                         <x-nav-link href="{{ route('anuncios.index') }}" :active="request()->routeIs('anuncios.index')">
                             {{ __('Anúncios') }}
@@ -31,6 +25,12 @@
                     @can('criar posts')
                         <x-nav-link href="{{ route('admin.posts') }}" :active="request()->routeIs('admin.posts')">
                             {{ __('Gerenciar Posts') }}
+                        </x-nav-link>
+                    @endcan
+
+                    @can('manage plans')
+                        <x-nav-link href="{{ route('admin.plans') }}" :active="request()->routeIs('admin.plans')">
+                            {{ __('Gerenciar Planos') }}
                         </x-nav-link>
                     @endcan
                 </div>
@@ -231,6 +231,18 @@
                         @endforeach
                     @endif
                 @endif
+
+                @can('criar anuncios')
+                    <x-responsive-nav-link href="{{ route('anuncios.index') }}" :active="request()->routeIs('anuncios.index')">
+                        {{ __('Anúncios') }}
+                    </x-responsive-nav-link>
+                @endcan
+                
+                @can('criar posts')
+                    <x-responsive-nav-link href="{{ route('admin.posts') }}" :active="request()->routeIs('admin.posts')">
+                        {{ __('Gerenciar Posts') }}
+                    </x-responsive-nav-link>
+                @endcan
 
                 @can('manage plans')
                     <x-responsive-nav-link href="{{ route('admin.plans') }}" :active="request()->routeIs('admin.plans')">

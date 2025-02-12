@@ -27,6 +27,12 @@
                         {{ __('Gerenciar Posts') }}
                     </x-nav-link>
                     @endcan
+
+                    @can('criar posts')
+                    <x-nav-link href="{{ route('admin.plans') }}" :active="request()->routeIs('admin.plans')">
+                        {{ __('Gerenciar Planos') }}
+                    </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
