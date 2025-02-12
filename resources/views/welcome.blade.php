@@ -89,4 +89,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Seção de Planos -->
+    <section class="py-24 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                    Escolha o plano ideal para você
+                </h2>
+                <p class="mt-4 text-xl text-gray-400">
+                    Temos opções para todos os perfis, desde iniciantes até profissionais.
+                </p>
+            </div>
+
+            <!-- Componente de Planos -->
+            @livewire('plans.show-plans')
+        </div>
+    </section>
 </x-frontend-layout>

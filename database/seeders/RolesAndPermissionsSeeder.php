@@ -27,8 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'excluir boosters',
             
             // Permissões de planos
-            'criar planos',
-            'atribuir planos',
+            'manage plans',
             
             // Permissões de perfil
             'postar fotos',
@@ -66,7 +65,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $acompanhante = Role::findOrCreate('acompanhante');
         $cliente = Role::findOrCreate('cliente');
 
-        // Atribuir permissões para admin
+        // Atribuir todas as permissões para admin
         $admin->givePermissionTo(Permission::all());
 
         // Atribuir permissões para acompanhante

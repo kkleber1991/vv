@@ -11,10 +11,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Primeiro executamos o seeder de roles e permissões
         $this->call([
-            RolesAndPermissionsSeeder::class,
-            DefaultUsersSeeder::class,
+            RolesAndPermissionsSeeder::class, // Primeiro cria as roles e permissões
+            PlansSeeder::class, // Depois cria os planos
+            DefaultUsersSeeder::class, // Por último cria os usuários
         ]);
     }
 }

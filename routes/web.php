@@ -33,6 +33,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/anuncios', GerenciarAnuncios::class)
         ->middleware('can:criar anuncios')
         ->name('anuncios.index');
+
+    Route::get('/admin/plans', App\Livewire\Admin\Plans\ManagePlans::class)
+        ->middleware('can:manage plans')
+        ->name('admin.plans');
 });
 
 // Rotas públicas
@@ -43,3 +47,6 @@ Route::get('/', function () {
 // Rotas de anúncios públicas
 Route::get('/anuncios-disponiveis', [AnuncioController::class, 'index'])
     ->name('anuncios.disponiveis');
+
+// Rotas de planos
+Route::get('/planos', App\Livewire\Plans\ShowPlans::class)->name('plans.index');

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'plan_id',
     ];
 
     /**
@@ -65,5 +66,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function plan()
+    {
+        return $this->belongsTo(Plan::class);
     }
 }
