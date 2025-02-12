@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BlogController;
 use App\Livewire\Admin\Posts;
+use App\Livewire\Anuncios\GerenciarAnuncios;
+use App\Http\Controllers\AnuncioController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -27,4 +29,17 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/admin/posts', Posts::class)
         ->middleware('can:criar posts')
         ->name('admin.posts');
+
+    Route::get('/anuncios', GerenciarAnuncios::class)
+        ->middleware('can:criar anuncios')
+        ->name('anuncios.index');
 });
+
+// Rotas públicas
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// Rotas de anúncios públicas
+Route::get('/anuncios-disponiveis', [AnuncioController::class, 'index'])
+    ->name('anuncios.disponiveis');

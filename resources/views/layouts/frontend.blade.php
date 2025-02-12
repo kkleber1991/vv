@@ -40,7 +40,14 @@
                             </button>
 
                             <div class="flex items-center space-x-4">
-                                <a href="{{ route('blog.index') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition font-medium">Blog</a>
+                                <a href="{{ route('anuncios.disponiveis') }}" 
+                                   class="text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                                    Anúncios
+                                </a>
+                                <a href="{{ route('blog.index') }}" 
+                                   class="text-base font-medium text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">
+                                    Blog
+                                </a>
                                 @auth
                                     <a href="{{ url('/dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-primary transition font-medium">Dashboard</a>
                                 @else

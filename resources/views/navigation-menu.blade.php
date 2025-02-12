@@ -16,6 +16,12 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     
+                    @can('criar anuncios')
+                        <x-nav-link href="{{ route('anuncios.index') }}" :active="request()->routeIs('anuncios.index')">
+                            {{ __('Anúncios') }}
+                        </x-nav-link>
+                    @endcan
+                    
                     @can('criar posts')
                         <x-nav-link href="{{ route('admin.posts') }}" :active="request()->routeIs('admin.posts')">
                             {{ __('Blog') }}
