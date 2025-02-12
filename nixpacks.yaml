@@ -1,9 +1,10 @@
 #Instalação de dependências
-depencencies:
+dependencies:
   composer:
     - install
   npm:
     - install
+
 #Especificando como gerar a key
 run:
   command: cp .env.example .env
@@ -12,9 +13,10 @@ run:
 env:
   APP_KEY: ${APP_KEY}
   APP_URL: http://localhost
-  DB_CONECTION: mysql
+  DB_CONNECTION: mysql   # Corrigido aqui
   DB_HOST: mysql
   DB_PORT: 3306
   DB_DATABASE: ksvitrinevirtualdb
   DB_USERNAME: admvitrinevirtualdb
   DB_PASSWORD: PWzG&v8tQs6z
+
