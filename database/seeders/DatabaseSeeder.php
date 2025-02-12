@@ -14,29 +14,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Primeiro executamos o seeder de roles e permissões
         $this->call([
             RolesAndPermissionsSeeder::class,
         ]);
 
         // Criar usuários padrão
-        $admin = User::factory()->create([
+        $admin = User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('killbill1020'),
+            'email_verified_at' => now(),
         ]);
         $admin->assignRole('admin');
 
-        $acompanhante = User::factory()->create([
+        $acompanhante = User::create([
             'name' => 'Acompanhante',
             'email' => 'acompanhante@gmail.com',
             'password' => Hash::make('killbill1020'),
+            'email_verified_at' => now(),
         ]);
         $acompanhante->assignRole('acompanhante');
 
-        $cliente = User::factory()->create([
+        $cliente = User::create([
             'name' => 'Cliente',
             'email' => 'cliente@gmail.com',
             'password' => Hash::make('killbill1020'),
+            'email_verified_at' => now(),
         ]);
         $cliente->assignRole('cliente');
     }

@@ -44,6 +44,8 @@ class RolesAndPermissionsSeeder extends Seeder
             
             // Permissões de blog
             'criar posts',
+            'editar posts',
+            'excluir posts',
             'gerenciar posts',
             
             // Permissões de pagamentos
@@ -51,17 +53,18 @@ class RolesAndPermissionsSeeder extends Seeder
             
             // Permissões de interação
             'enviar mensagens',
-            'dar likes'
+            'dar likes',
         ];
 
+        // Criar permissões se não existirem
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::findOrCreate($permission);
         }
 
-        // Criar roles
-        $admin = Role::create(['name' => 'admin']);
-        $acompanhante = Role::create(['name' => 'acompanhante']);
-        $cliente = Role::create(['name' => 'cliente']);
+        // Criar roles se não existirem
+        $admin = Role::findOrCreate('admin');
+        $acompanhante = Role::findOrCreate('acompanhante');
+        $cliente = Role::findOrCreate('cliente');
 
         // Atribuir permissões para admin
         $admin->givePermissionTo(Permission::all());

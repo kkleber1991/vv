@@ -15,6 +15,12 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    
+                    @can('criar posts')
+                        <x-nav-link href="{{ route('admin.posts') }}" :active="request()->routeIs('admin.posts')">
+                            {{ __('Blog') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
