@@ -17,8 +17,8 @@ class PlanSubscriptionController extends Controller
     {
         $user = Auth::user();
         
-        // Verifica se o usuário já tem um plano ativo
-        if ($user->plan_id) {
+        // Verifica se o usuário já tem um plano ativo e não é o plano Free
+        if ($user->plan_id && $user->plan->price > 0) {
             return redirect()->back()
                 ->with('error', 'Você já possui um plano ativo. Entre em contato com o suporte para alterá-lo.');
         }
