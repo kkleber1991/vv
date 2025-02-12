@@ -6,6 +6,7 @@ depencencies:
     - install
 #Especificando como gerar a key
 run:
+  command: cp .env.example .env
   command: php artisan key:generate
 #Configurar .env
 env:
