@@ -32,7 +32,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Estado
                         </label>
-                        <select name="estado" id="estado" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <select name="estado" id="estado" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-300">
                             <option value="">Selecione o estado</option>
                             @foreach($estados as $uf => $nome)
                                 <option value="{{ $uf }}">{{ $nome }}</option>
@@ -45,7 +45,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Cidade
                         </label>
-                        <select name="cidade" id="cidade" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <select name="cidade" id="cidade" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-300">
                             <option value="">Selecione primeiro o estado</option>
                         </select>
                     </div>
@@ -55,7 +55,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Tipo
                         </label>
-                        <select name="tipo" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <select name="tipo" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-300">
                             <option value="">Todos os tipos</option>
                             @foreach($tipos as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
@@ -68,7 +68,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Serviço
                         </label>
-                        <select name="servico" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <select name="servico" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-300">
                             <option value="">Todos os serviços</option>
                             @foreach($servicos as $servico)
                                 <option value="{{ $servico }}">{{ $servico }}</option>
@@ -81,7 +81,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Valor
                         </label>
-                        <select name="valor" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                        <select name="valor" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900 text-gray-300">
                             <option value="">Qualquer valor</option>
                             @foreach($faixasValores as $value => $label)
                                 <option value="{{ $value }}">{{ $label }}</option>
@@ -160,9 +160,9 @@
                                         @if($anuncio->foto_principal)
                                             <img src="{{ asset('storage/' . $anuncio->foto_principal) }}" 
                                                  alt="{{ $anuncio->nome }}"
-                                                 class="w-full h-full object-cover">
+                                                 class="w-full anuncio-foto">
                                         @else
-                                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                            <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                                 <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" 
                                                           d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -176,7 +176,7 @@
                                         <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                                             <p>{{ $anuncio->idade }} anos • {{ $anuncio->cidade }}/{{ $anuncio->estado }}</p>
                                             <p class="font-medium text-primary">
-                                                A partir de R$ {{ number_format(min(array_filter([$anuncio->valor_30min, $anuncio->valor_1hr, $anuncio->valor_2hr, $anuncio->valor_3hr])), 2, ',', '.') }}
+                                                R$ {{ number_format(min(array_filter([$anuncio->valor_30min, $anuncio->valor_1hr, $anuncio->valor_2hr, $anuncio->valor_3hr])), 2, ',', '.') }}
                                             </p>
                                         </div>
                                     </div>
@@ -240,4 +240,13 @@ document.getElementById('estado').addEventListener('change', function() {
     }
 });
 </script>
-@endpush 
+@endpush
+
+<!-- Adicione este trecho de estilo inline ou em uma seção de estilos -->
+<style>
+    .anuncio-foto {
+        max-height: 240px;
+        object-fit: cover;
+        width: 100%;
+    }
+</style> 

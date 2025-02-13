@@ -97,18 +97,30 @@
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Valores</h3>
                         <div class="grid grid-cols-2 gap-4">
-                            @if($anuncio->valor_30min)
-                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                    <span class="block text-sm text-gray-600 dark:text-gray-400">30 minutos</span>
-                                    <span class="block text-lg font-bold text-primary">R$ {{ number_format($anuncio->valor_30min, 2, ',', '.') }}</span>
-                                </div>
-                            @endif
-                            @if($anuncio->valor_1hr)
-                                <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
-                                    <span class="block text-sm text-gray-600 dark:text-gray-400">1 hora</span>
-                                    <span class="block text-lg font-bold text-primary">R$ {{ number_format($anuncio->valor_1hr, 2, ',', '.') }}</span>
-                                </div>
-                            @endif
+                            <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                                <span class="block text-sm text-gray-600 dark:text-gray-400">30 minutos</span>
+                                <span class="block text-lg font-bold text-primary">
+                                    {{ $anuncio->valor_30min ? 'R$ ' . number_format($anuncio->valor_30min, 2, ',', '.') : '----' }}
+                                </span>
+                            </div>
+                            <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                                <span class="block text-sm text-gray-600 dark:text-gray-400">1 hora</span>
+                                <span class="block text-lg font-bold text-primary">
+                                    {{ $anuncio->valor_1hr ? 'R$ ' . number_format($anuncio->valor_1hr, 2, ',', '.') : '----' }}
+                                </span>
+                            </div>
+                            <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                                <span class="block text-sm text-gray-600 dark:text-gray-400">2 horas</span>
+                                <span class="block text-lg font-bold text-primary">
+                                    {{ $anuncio->valor_2hr ? 'R$ ' . number_format($anuncio->valor_2hr, 2, ',', '.') : '----' }}
+                                </span>
+                            </div>
+                            <div class="text-center p-3 bg-white dark:bg-gray-800 rounded-lg">
+                                <span class="block text-sm text-gray-600 dark:text-gray-400">3 horas</span>
+                                <span class="block text-lg font-bold text-primary">
+                                    {{ $anuncio->valor_3hr ? 'R$ ' . number_format($anuncio->valor_3hr, 2, ',', '.') : '----' }}
+                                </span>
+                            </div>
                         </div>
                     </div>
 
