@@ -139,5 +139,70 @@
                 </footer>
             </div>
         </x-base-layout>
+
+        <!-- Adicione antes do fechamento do body -->
+        <div x-data="ageVerification()" 
+             x-show="showModal" 
+             x-cloak 
+             class="fixed inset-0 z-50 overflow-y-auto" 
+             aria-labelledby="modal-title" 
+             role="dialog" 
+             aria-modal="true">
+            
+            <!-- Overlay de fundo -->
+            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+
+            <!-- Conteúdo do Modal -->
+            <div class="flex min-h-screen items-center justify-center p-4 text-center sm:p-0">
+                <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                        <div class="sm:flex sm:items-start">
+                            <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900 sm:mx-0 sm:h-10 sm:w-10">
+                                <svg class="h-6 w-6 text-red-600 dark:text-red-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                                </svg>
+                            </div>
+                            <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+                                <h3 class="text-xl font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">
+                                    Verificação de Idade
+                                </h3>
+                                <div class="mt-4">
+                                    <p class="text-base text-gray-600 dark:text-gray-400">
+                                        Este site contém conteúdo adulto e é destinado apenas para maiores de 18 anos.
+                                    </p>
+                                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                        Ao clicar em "Confirmar", você declara que tem 18 anos ou mais.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                        <button type="button" 
+                                @click="confirmAge()" 
+                                class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-dark sm:ml-3 sm:w-auto">
+                            Confirmar
+                        </button>
+                        <a href="https://google.com" 
+                           class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 sm:mt-0 sm:w-auto">
+                            Sair
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Adicione antes do fechamento do body -->
+        <script>
+            function ageVerification() {
+                return {
+                    showModal: !localStorage.getItem('age_verified'),
+                    confirmAge() {
+                        localStorage.setItem('age_verified', 'true');
+                        this.showModal = false;
+                    }
+                }
+            }
+        </script>
     </body>
 </html> 
