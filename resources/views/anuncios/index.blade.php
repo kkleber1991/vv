@@ -26,43 +26,72 @@
 
             <!-- Header com Filtros -->
             <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-                <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <form class="grid grid-cols-1 md:grid-cols-5 gap-4">
+                    <!-- Estado -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Estado
+                        </label>
+                        <select name="estado" id="estado" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <option value="">Selecione o estado</option>
+                            @foreach($estados as $uf => $nome)
+                                <option value="{{ $uf }}">{{ $nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Cidade -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Cidade
                         </label>
-                        <select class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
-                            <option value="">Todas as cidades</option>
-                            @foreach($cidades as $cidade)
-                                <option value="{{ $cidade }}">{{ $cidade }}</option>
+                        <select name="cidade" id="cidade" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <option value="">Selecione primeiro o estado</option>
+                        </select>
+                    </div>
+
+                    <!-- Tipo -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            Tipo
+                        </label>
+                        <select name="tipo" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <option value="">Todos os tipos</option>
+                            @foreach($tipos as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
                             @endforeach
                         </select>
                     </div>
+
+                    <!-- Serviços -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Categoria
+                            Serviço
                         </label>
-                        <select class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
-                            <option value="">Todas as categorias</option>
-                            @foreach($categorias as $categoria)
-                                <option value="{{ $categoria }}">{{ $categoria }}</option>
+                        <select name="servico" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <option value="">Todos os serviços</option>
+                            @foreach($servicos as $servico)
+                                <option value="{{ $servico }}">{{ $servico }}</option>
                             @endforeach
                         </select>
                     </div>
+
+                    <!-- Valor -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                            Preço
+                            Valor
                         </label>
-                        <select class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
-                            <option value="">Qualquer preço</option>
-                            <option value="0-100">Até R$ 100</option>
-                            <option value="100-200">R$ 100 - R$ 200</option>
-                            <option value="200-300">R$ 200 - R$ 300</option>
-                            <option value="300+">Acima de R$ 300</option>
+                        <select name="valor" class="w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <option value="">Qualquer valor</option>
+                            @foreach($faixasValores as $value => $label)
+                                <option value="{{ $value }}">{{ $label }}</option>
+                            @endforeach
                         </select>
                     </div>
-                    <div class="flex items-end">
-                        <button type="submit" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md transition">
+
+                    <!-- Botão de Filtrar -->
+                    <div class="md:col-span-5 flex justify-end">
+                        <button type="submit" class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md transition">
                             Filtrar
                         </button>
                     </div>
@@ -184,4 +213,31 @@
             </div>
         </div>
     </div>
-</x-frontend-layout> 
+</x-frontend-layout>
+
+<!-- Adicione este script para o filtro dinâmico de cidades -->
+@push('scripts')
+<script>
+document.getElementById('estado').addEventListener('change', function() {
+    const estado = this.value;
+    const cidadeSelect = document.getElementById('cidade');
+    
+    // Limpa as opções atuais
+    cidadeSelect.innerHTML = '<option value="">Selecione a cidade</option>';
+    
+    if (estado) {
+        // Faz uma requisição para buscar as cidades do estado selecionado
+        fetch(`/api/cidades/${estado}`)
+            .then(response => response.json())
+            .then(cidades => {
+                cidades.forEach(cidade => {
+                    const option = document.createElement('option');
+                    option.value = cidade;
+                    option.textContent = cidade;
+                    cidadeSelect.appendChild(option);
+                });
+            });
+    }
+});
+</script>
+@endpush 
