@@ -53,6 +53,9 @@ class RolesAndPermissionsSeeder extends Seeder
             // Permissões de interação
             'enviar mensagens',
             'dar likes',
+            
+            // Permissões de usuários
+            'manage users',
         ];
 
         // Criar permissões se não existirem

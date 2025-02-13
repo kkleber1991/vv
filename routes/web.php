@@ -44,6 +44,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         ->name('plans.subscribe.form');
     Route::post('/planos/{plan}/assinar', [PlanSubscriptionController::class, 'subscribe'])
         ->name('plans.subscribe');
+
+    Route::get('/admin/users', App\Livewire\Admin\Users\ManageUsers::class)
+        ->middleware('can:manage users')
+        ->name('admin.users');
 });
 
 // Rotas públicas

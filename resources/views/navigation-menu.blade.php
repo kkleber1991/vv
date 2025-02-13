@@ -33,6 +33,12 @@
                             {{ __('Gerenciar Planos') }}
                         </x-nav-link>
                     @endcan
+
+                    @can('manage users')
+                        <x-nav-link href="{{ route('admin.users') }}" :active="request()->routeIs('admin.users')">
+                            {{ __('Gerenciar Usuários') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -247,6 +253,12 @@
                 @can('manage plans')
                     <x-responsive-nav-link href="{{ route('admin.plans') }}" :active="request()->routeIs('admin.plans')">
                         {{ __('Gerenciar Planos') }}
+                    </x-responsive-nav-link>
+                @endcan
+
+                @can('manage users')
+                    <x-responsive-nav-link href="{{ route('admin.users') }}" :active="request()->routeIs('admin.users')">
+                        {{ __('Gerenciar Usuários') }}
                     </x-responsive-nav-link>
                 @endcan
             </div>
