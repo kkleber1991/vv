@@ -37,7 +37,8 @@ class Anuncio extends Model
         'locais_atendimento',
         'formas_pagamento',
         'linguas',
-        'user_id'
+        'user_id',
+        'foto_principal'
     ];
 
     protected $casts = [

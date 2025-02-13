@@ -1,6 +1,29 @@
 <x-frontend-layout>
-    <div class="pt-32 pb-20">
+    <div class="pt-8 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Slots de Anúncios e Boosts -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Slot para Ads -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
+                        <span class="text-gray-500 dark:text-gray-400">Espaço Publicitário</span>
+                    </div>
+                </div>
+
+                <!-- Slots para Boosts -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
+                        <span class="text-gray-500 dark:text-gray-400">Boost 1</span>
+                    </div>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
+                        <span class="text-gray-500 dark:text-gray-400">Boost 2</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Header com Filtros -->
             <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
                 <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -66,9 +89,18 @@
                                         
                                         <!-- Imagem Principal -->
                                         <div class="aspect-w-3 aspect-h-4">
-                                            <img src="{{ asset('storage/' . $anuncio->foto_principal) }}" 
-                                                 alt="{{ $anuncio->nome }}"
-                                                 class="w-full h-full object-cover">
+                                            @if($anuncio->foto_principal)
+                                                <img src="{{ asset('storage/' . $anuncio->foto_principal) }}" 
+                                                     alt="{{ $anuncio->nome }}"
+                                                     class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" 
+                                                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
 
@@ -96,9 +128,18 @@
                             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:-translate-y-1">
                                 <a href="{{ route('anuncios.show', $anuncio->slug) }}" class="block">
                                     <div class="aspect-w-3 aspect-h-4">
-                                        <img src="{{ asset('storage/' . $anuncio->foto_principal) }}" 
-                                             alt="{{ $anuncio->nome }}"
-                                             class="w-full h-full object-cover">
+                                        @if($anuncio->foto_principal)
+                                            <img src="{{ asset('storage/' . $anuncio->foto_principal) }}" 
+                                                 alt="{{ $anuncio->nome }}"
+                                                 class="w-full h-full object-cover">
+                                        @else
+                                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" 
+                                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                </svg>
+                                            </div>
+                                        @endif
                                     </div>
                                     
                                     <div class="p-4">

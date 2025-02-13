@@ -7,4 +7,10 @@
             {{ $slot }}
         </main>
     </div>
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
 </x-base-layout>

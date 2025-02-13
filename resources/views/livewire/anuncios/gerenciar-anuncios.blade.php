@@ -1,4 +1,65 @@
 <div class="py-12">
+    <!-- Modal de Limite Atingido -->
+    <div x-data="{ show: @entangle('showLimitModal') }"
+         x-show="show"
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto"
+         aria-labelledby="modal-title"
+         role="dialog"
+         aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div x-show="show"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                 aria-hidden="true"></div>
+
+            <!-- Modal panel -->
+            <div x-show="show"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                 class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+                <div>
+                    <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900">
+                        <svg class="h-6 w-6 text-red-600 dark:text-red-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    </div>
+                    <div class="mt-3 text-center sm:mt-5">
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white" id="modal-title">
+                            Limite de Anúncios Atingido
+                        </h3>
+                        <div class="mt-2">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                {{ $limitMessage }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
+                    <a href="{{ route('plans.index') }}"
+                       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:col-start-2">
+                        Atualizar Plano
+                    </a>
+                    <button type="button"
+                            @click="show = false"
+                            class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:col-start-1">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
             <div class="p-6">
@@ -135,42 +196,27 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado</label>
-                            <select wire:model="estado" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <select wire:model.live="estado" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
                                 <option value="">Selecione um estado</option>
-                                <option value="AC">Acre</option>
-                                <option value="AL">Alagoas</option>
-                                <option value="AP">Amapá</option>
-                                <option value="AM">Amazonas</option>
-                                <option value="BA">Bahia</option>
-                                <option value="CE">Ceará</option>
-                                <option value="DF">Distrito Federal</option>
-                                <option value="ES">Espírito Santo</option>
-                                <option value="GO">Goiás</option>
-                                <option value="MA">Maranhão</option>
-                                <option value="MT">Mato Grosso</option>
-                                <option value="MS">Mato Grosso do Sul</option>
-                                <option value="MG">Minas Gerais</option>
-                                <option value="PA">Pará</option>
-                                <option value="PB">Paraíba</option>
-                                <option value="PR">Paraná</option>
-                                <option value="PE">Pernambuco</option>
-                                <option value="PI">Piauí</option>
-                                <option value="RJ">Rio de Janeiro</option>
-                                <option value="RN">Rio Grande do Norte</option>
-                                <option value="RS">Rio Grande do Sul</option>
-                                <option value="RO">Rondônia</option>
-                                <option value="RR">Roraima</option>
-                                <option value="SC">Santa Catarina</option>
-                                <option value="SP">São Paulo</option>
-                                <option value="SE">Sergipe</option>
-                                <option value="TO">Tocantins</option>
+                                @foreach($estados as $uf => $nome)
+                                    <option value="{{ $uf }}">{{ $nome }}</option>
+                                @endforeach
                             </select>
                             @error('estado') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
 
-                        <div>
+                        <div wire:key="cidade-select">
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
-                            <input type="text" wire:model="cidade" class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900">
+                            <select wire:model="cidade" 
+                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-700 dark:bg-gray-900" 
+                                    {{ empty($estado) ? 'disabled' : '' }}>
+                                <option value="">Selecione uma cidade</option>
+                                @if(!empty($estado))
+                                    @foreach($cidades as $cidadeOpcao)
+                                        <option value="{{ $cidadeOpcao }}">{{ $cidadeOpcao }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
                             @error('cidade') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
                         </div>
                     </div>
@@ -266,51 +312,80 @@
                     </div>
 
                     <!-- Seção de Upload de Fotos -->
-                    <div class="mt-8">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Fotos e Vídeos</h3>
-                        
+                    <div class="space-y-6">
                         <!-- Foto Principal -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Foto Principal
-                                <span class="text-red-500">*</span>
                             </label>
-                            <div class="mt-1 flex items-center">
-                                <div class="flex-shrink-0">
-                                    @if ($foto_principal)
-                                        <img src="{{ $foto_principal->temporaryUrl() }}" 
-                                             class="h-32 w-32 object-cover rounded-lg">
-                                    @elseif ($isEditing && $currentAnuncio && $currentAnuncio->foto_principal)
-                                        <img src="{{ Storage::url($currentAnuncio->foto_principal) }}" 
-                                             class="h-32 w-32 object-cover rounded-lg">
-                                    @else
-                                        <div class="h-32 w-32 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
-                                            <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
-                                        </div>
-                                    @endif
-                                </div>
-                                <div class="ml-4">
-                                    <div class="flex items-center">
-                                        <label class="relative cursor-pointer bg-white dark:bg-gray-800 rounded-md font-medium text-primary hover:text-primary-dark focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-primary">
-                                            <span>Upload foto</span>
-                                            <input type="file" wire:model="foto_principal" class="sr-only" accept="image/*">
-                                        </label>
-                                    </div>
-                                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                        PNG, JPG até 2MB
-                                    </p>
-                                    @error('foto_principal')
-                                        <span class="text-red-500 text-sm">{{ $message }}</span>
-                                    @enderror
-                                </div>
+                            <div class="mt-1 flex items-center space-x-4">
+                                @if ($foto_principal && !$foto_principal->isPreviewable())
+                                    <img src="{{ $foto_principal->temporaryUrl() }}" class="h-32 w-32 object-cover rounded-lg">
+                                @elseif ($isEditing && $currentAnuncio->foto_principal)
+                                    <img src="{{ asset('storage/' . $currentAnuncio->foto_principal) }}" class="h-32 w-32 object-cover rounded-lg">
+                                @endif
+                                
+                                <input type="file" wire:model="foto_principal" class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-medium
+                                    file:bg-primary file:text-white
+                                    hover:file:cursor-pointer hover:file:bg-primary-dark">
                             </div>
+                            @error('foto_principal') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                         </div>
 
                         <!-- Fotos Adicionais -->
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Fotos Adicionais (Máximo: {{ auth()->user()->plan->max_photos }} fotos)
+                            </label>
+                            <div class="mt-1">
+                                <input type="file" wire:model="fotos" multiple class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-md file:border-0
+                                    file:text-sm file:font-medium
+                                    file:bg-primary file:text-white
+                                    hover:file:cursor-pointer hover:file:bg-primary-dark">
+                            </div>
+                            @error('fotos.*') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                            
+                            <!-- Preview das Fotos -->
+                            @if (count($fotos) > 0)
+                                <div class="grid grid-cols-4 gap-4 mt-4">
+                                    @foreach($fotos as $foto)
+                                        @if ($foto->isPreviewable())
+                                            <div class="relative">
+                                                <img src="{{ $foto->temporaryUrl() }}" class="h-24 w-24 object-cover rounded-lg">
+                                                <button wire:click="removeFoto({{ $loop->index }})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+
+                            <!-- Fotos Existentes (se estiver editando) -->
+                            @if ($isEditing && $currentAnuncio->fotos->count() > 0)
+                                <div class="grid grid-cols-4 gap-4 mt-4">
+                                    @foreach($currentAnuncio->fotos as $foto)
+                                        <div class="relative">
+                                            <img src="{{ asset('storage/' . $foto->path) }}" class="h-24 w-24 object-cover rounded-lg">
+                                            <button wire:click="deleteFoto({{ $foto->id }})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
                     <!-- Botões de Ação -->
                     <div class="flex justify-end space-x-3">
                         @if($isEditing)
