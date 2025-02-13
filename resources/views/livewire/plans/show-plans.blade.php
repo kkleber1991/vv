@@ -85,7 +85,8 @@
                     <div class="p-8 mt-auto">
                         @auth
                             @if(auth()->user()->hasRole('acompanhante'))
-                                <a href="{{ route('plans.subscribe.form', $plan) }}"
+                                <a href="https://wa.me/5562998245235?text=Olá! Gostaria de contratar o plano {{ $plan->name }}"
+                                   target="_blank"
                                    class="block w-full text-center px-6 py-3 rounded-lg {{ $plan->is_popular ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700 border-solid border-2 border-red-700' }} text-white font-semibold transition duration-150">
                                     {{ $plan->price > 0 ? ($plan->is_popular ? 'Escolher Premium' : ($plan->name === 'VIP' ? 'Seja VIP' : 'Começar Agora')) : 'Começar Grátis' }}
                                 </a>
@@ -96,9 +97,10 @@
                                 </button>
                             @endif
                         @else
-                            <a href="{{ route('register', ['plan' => $plan->slug]) }}"
+                            <a href="https://wa.me/5562998245235?text=Olá! Gostaria de contratar o plano {{ $plan->name }}"
+                               target="_blank"
                                class="block w-full text-center px-6 py-3 rounded-lg {{ $plan->is_popular ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-800 hover:bg-gray-700 border-solid border-2 border-red-700' }} text-white font-semibold transition duration-150">
-                                Cadastre-se
+                                Contratar Plano
                             </a>
                         @endauth
                     </div>

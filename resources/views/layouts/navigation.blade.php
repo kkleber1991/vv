@@ -39,7 +39,13 @@
 
                     @can('criar posts')
                     <x-nav-link href="{{ route('admin.users') }}" :active="request()->routeIs('admin.users')">
-                        {{ __('Gerenciar Planos') }}
+                        {{ __('Gerenciar Usuários') }}
+                    </x-nav-link>
+                    @endcan
+
+                    @can('criar posts')
+                    <x-nav-link href="{{ route('admin.ad-spaces') }}" :active="request()->routeIs('admin.ad-spaces')">
+                        {{ __('Gerenciar ADS') }}
                     </x-nav-link>
                     @endcan
                 </div>
