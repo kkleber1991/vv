@@ -48,6 +48,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/admin/users', App\Livewire\Admin\Users\ManageUsers::class)
         ->middleware('can:manage users')
         ->name('admin.users');
+
+    Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])
+        ->name('admin.dashboard');
 });
 
 // Rotas públicas
