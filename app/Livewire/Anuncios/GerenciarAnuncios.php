@@ -4,6 +4,7 @@ namespace App\Livewire\Anuncios;
 
 use App\Models\Anuncio;
 use App\Models\AnuncioFoto;
+use App\Models\AnuncioVideo;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -92,7 +93,12 @@ class GerenciarAnuncios extends Component
         'atende' => 'required|array|min:1',
         'foto_principal' => 'nullable|image|max:2048', // 2MB max
         'fotos.*' => 'nullable|image|max:2048',
-        'videos.*' => ['nullable', 'mimetypes:video/mp4,video/quicktime', 'max:10240'], // 10MB
+        'videos.*' => [
+            'nullable',
+            'mimetypes:video/mp4,video/quicktime',
+            'max:10240', // 10MB
+            'required_with:videos'
+        ],
     ];
 
     protected $messages = [
@@ -142,6 +148,36 @@ class GerenciarAnuncios extends Component
         } else {
             $this->cidades = [];
         }
+    }
+
+    public function updatedVideos()
+    {
+        $maxVideos = auth()->user()->plan->max_videos;
+        $currentVideos = $this->isEditing ? $this->currentAnuncio->videos()->count() : 0;
+        
+        if (count($this->videos) + $currentVideos > $maxVideos) {
+            $this->videos = [];
+            session()->flash('error', "Seu plano permite apenas {$maxVideos} vídeos por anúncio.");
+        }
+
+        // Validar duração dos vídeos (45 segundos)
+        foreach ($this->videos as $index => $video) {
+            try {
+                $tmpPath = $video->getRealPath();
+                $ffprobe = \FFMpeg\FFProbe::create();
+                $duration = $ffprobe->format($tmpPath)->get('duration');
+                
+                if ($duration > 45) {
+                    unset($this->videos[$index]);
+                    session()->flash('error', 'Os vídeos devem ter no máximo 45 segundos de duração.');
+                }
+            } catch (\Exception $e) {
+                session()->flash('error', 'Erro ao processar o vídeo. Certifique-se de que é um arquivo de vídeo válido.');
+                unset($this->videos[$index]);
+            }
+        }
+        
+        $this->videos = array_values($this->videos);
     }
 
     public function save()
@@ -276,10 +312,13 @@ class GerenciarAnuncios extends Component
 
             DB::commit();
             
-            $this->reset();
-            $this->currentAnuncio = null; // Reseta o anúncio atual
+            session()->flash('message', $this->isEditing ? 'Anúncio atualizado com sucesso!' : 'Anúncio criado com sucesso!');
             
-            return redirect()->route('anuncios.index');
+            if (!$this->isEditing) {
+                $this->reset();
+                $this->currentAnuncio = null;
+                return redirect()->route('anuncios.index');
+            }
             
         } catch (\Exception $e) {
             DB::rollBack();
@@ -371,6 +410,19 @@ class GerenciarAnuncios extends Component
         if ($foto && $foto->anuncio->user_id === auth()->id()) {
             Storage::disk('public')->delete($foto->path);
             $foto->delete();
+            // Atualiza a lista de fotos atuais sem salvar o anúncio
+            $this->fotosAtuais = $this->currentAnuncio->fotos()->get();
+        }
+    }
+
+    public function deleteVideo($id)
+    {
+        $video = AnuncioVideo::find($id);
+        if ($video && $video->anuncio->user_id === auth()->id()) {
+            Storage::disk('public')->delete($video->path);
+            $video->delete();
+            // Atualiza a lista de vídeos atuais sem salvar o anúncio
+            $this->videosAtuais = $this->currentAnuncio->videos()->get();
         }
     }
 

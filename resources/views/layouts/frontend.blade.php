@@ -13,6 +13,10 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600|playfair+display:400,500,600&display=swap" rel="stylesheet" />
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Swiper.js -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     </head>
     <body class="antialiased bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <x-base-layout>

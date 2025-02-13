@@ -371,10 +371,12 @@
                             <!-- Fotos Existentes (se estiver editando) -->
                             @if ($isEditing && $currentAnuncio->fotos->count() > 0)
                                 <div class="grid grid-cols-4 gap-4 mt-4">
-                                    @foreach($currentAnuncio->fotos as $foto)
+                                    @foreach($fotosAtuais as $foto)
                                         <div class="relative">
                                             <img src="{{ asset('storage/' . $foto->path) }}" class="h-24 w-24 object-cover rounded-lg">
-                                            <button wire:click="deleteFoto({{ $foto->id }})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
+                                            <button wire:click.prevent="deleteFoto({{ $foto->id }})" 
+                                                    type="button"
+                                                    class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                                 </svg>
@@ -384,6 +386,64 @@
                                 </div>
                             @endif
                         </div>
+                    </div>
+
+                    <!-- Após o bloco de upload de fotos -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Vídeos (Máximo: {{ auth()->user()->plan->max_videos }} vídeos de até 45 segundos)
+                        </label>
+                        <div class="mt-1">
+                            <input type="file" wire:model="videos" multiple 
+                                   accept="video/mp4,video/quicktime"
+                                   class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                        file:mr-4 file:py-2 file:px-4
+                                        file:rounded-md file:border-0
+                                        file:text-sm file:font-medium
+                                        file:bg-primary file:text-white
+                                        hover:file:cursor-pointer hover:file:bg-primary-dark">
+                        </div>
+                        @error('videos.*') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+
+                        <!-- Preview dos Vídeos Atuais -->
+                        @if($isEditing && $videosAtuais->count() > 0)
+                        <div class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach($videosAtuais as $video)
+                            <div class="relative">
+                                <video class="w-full h-32 object-cover rounded-lg" controls>
+                                    <source src="{{ asset('storage/' . $video->path) }}" type="video/mp4">
+                                    Seu navegador não suporta o elemento de vídeo.
+                                </video>
+                                <button type="button" wire:click="deleteVideo({{ $video->id }})"
+                                        class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
+
+                        <!-- Preview dos Novos Vídeos -->
+                        @if($videos && count($videos) > 0)
+                        <div class="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            @foreach($videos as $index => $video)
+                            <div class="relative">
+                                <video class="w-full h-32 object-cover rounded-lg" controls>
+                                    <source src="{{ $video->temporaryUrl() }}" type="video/mp4">
+                                    Seu navegador não suporta o elemento de vídeo.
+                                </video>
+                                <button type="button" wire:click="removeVideo({{ $index }})"
+                                        class="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            @endforeach
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Botões de Ação -->
