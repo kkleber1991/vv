@@ -56,6 +56,9 @@ class AnuncioController extends Controller
             ->where('status', 'ativo')
             ->firstOrFail();
 
+        // Registra a visualização
+        $anuncio->registerView();
+
         return view('anuncios.show', compact('anuncio'));
     }
 } 
