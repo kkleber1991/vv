@@ -80,4 +80,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Anuncio::class);
     }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
+    }
 }

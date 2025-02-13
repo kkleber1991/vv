@@ -120,4 +120,9 @@ class Anuncio extends Model
     {
         return $this->hasMany(AnuncioVideo::class);
     }
+
+    public function favoritos()
+    {
+        return $this->hasMany(Favorito::class);
+    }
 } 
