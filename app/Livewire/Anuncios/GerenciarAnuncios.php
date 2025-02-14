@@ -93,12 +93,7 @@ class GerenciarAnuncios extends Component
         'atende' => 'required|array|min:1',
         'foto_principal' => 'nullable|image|max:2048', // 2MB max
         'fotos.*' => 'nullable|image|max:2048',
-        'videos.*' => [
-            'nullable',
-            'mimetypes:video/mp4,video/quicktime',
-            'max:10240', // 10MB
-            'required_with:videos'
-        ],
+        'videos.*' => 'mimes:mp4,avi,mov|max:50000', // Validação para vídeos
     ];
 
     protected $messages = [
@@ -106,8 +101,8 @@ class GerenciarAnuncios extends Component
         'foto_principal.max' => 'A imagem não pode ter mais que 2MB.',
         'fotos.*.image' => 'Todos os arquivos devem ser imagens.',
         'fotos.*.max' => 'As imagens não podem ter mais que 2MB.',
-        'videos.*.mimetypes' => 'Os vídeos devem estar no formato MP4 ou MOV.',
-        'videos.*.max' => 'Cada vídeo não pode ser maior que 10MB.',
+        'videos.*.mimes' => 'O arquivo deve ser um vídeo (mp4, avi ou mov)',
+        'videos.*.max' => 'O vídeo não pode ser maior que 50MB'
     ];
 
     public function mount()
@@ -152,38 +147,45 @@ class GerenciarAnuncios extends Component
 
     public function updatedVideos()
     {
-        $maxVideos = auth()->user()->plan->max_videos;
-        $currentVideos = $this->isEditing ? $this->currentAnuncio->videos()->count() : 0;
-        
-        if (count($this->videos) + $currentVideos > $maxVideos) {
-            $this->videos = [];
-            session()->flash('error', "Seu plano permite apenas {$maxVideos} vídeos por anúncio.");
-        }
-
-        // Validar duração dos vídeos (45 segundos)
-        foreach ($this->videos as $index => $video) {
-            try {
-                $tmpPath = $video->getRealPath();
-                $ffprobe = \FFMpeg\FFProbe::create();
-                $duration = $ffprobe->format($tmpPath)->get('duration');
-                
-                if ($duration > 45) {
-                    unset($this->videos[$index]);
-                    session()->flash('error', 'Os vídeos devem ter no máximo 45 segundos de duração.');
-                }
-            } catch (\Exception $e) {
-                session()->flash('error', 'Erro ao processar o vídeo. Certifique-se de que é um arquivo de vídeo válido.');
-                unset($this->videos[$index]);
-            }
-        }
-        
-        $this->videos = array_values($this->videos);
+        $this->validate([
+            'videos.*' => 'mimes:mp4,avi,mov|max:50000', // Validação para vídeos
+        ], [
+            'videos.*.mimes' => 'O arquivo deve ser um vídeo (mp4, avi ou mov)',
+            'videos.*.max' => 'O vídeo não pode ser maior que 50MB'
+        ]);
     }
 
     public function save()
     {
-        $this->validate();
-        
+        $data = $this->validate([
+            'titulo' => 'required|min:6',
+            'descricao' => 'required|min:20',
+            'nome' => 'required|min:2',
+            'idade' => 'required|integer|min:18',
+            'peso' => 'nullable|numeric|min:30|max:200',
+            'tipo' => 'required|in:homem,mulher,trans',
+            'nacionalidade' => 'required',
+            'whatsapp' => 'required|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'cidade' => 'required',
+            'estado' => 'required',
+            'status' => 'required|in:ativo,inativo',
+            'valor_30min' => 'nullable|numeric|min:0',
+            'valor_1hr' => 'nullable|numeric|min:0',
+            'valor_2hr' => 'nullable|numeric|min:0',
+            'valor_3hr' => 'nullable|numeric|min:0',
+            'horario_inicio' => 'required',
+            'horario_fim' => 'required',
+            'servicos' => 'required|array|min:1',
+            'extras' => 'required|array|min:1',
+            'locais_atendimento' => 'required|array|min:1',
+            'formas_pagamento' => 'required|array|min:1',
+            'linguas' => 'required|array|min:1',
+            'atende' => 'required|array|min:1',
+            'foto_principal' => 'nullable|image|max:2048', // 2MB max
+            'fotos.*' => 'nullable|image|max:2048',
+            'videos.*' => 'mimes:mp4,avi,mov|max:50000', // Validação para vídeos
+        ]);
+
         try {
             DB::beginTransaction();
             
@@ -216,47 +218,17 @@ class GerenciarAnuncios extends Component
                 return;
             }
 
-            $data = [
-                'titulo' => $this->titulo,
-                'descricao' => $this->descricao,
-                'nome' => $this->nome,
-                'idade' => $this->idade,
-                'peso' => $this->peso,
-                'tipo' => $this->tipo,
-                'nacionalidade' => $this->nacionalidade,
-                'whatsapp' => $this->whatsapp,
-                'cidade' => $this->cidade,
-                'estado' => $this->estado,
-                'status' => $this->status,
-                'valor_30min' => $this->valor_30min,
-                'valor_1hr' => $this->valor_1hr,
-                'valor_2hr' => $this->valor_2hr,
-                'valor_3hr' => $this->valor_3hr,
-                'horario_inicio' => $this->horario_inicio,
-                'horario_fim' => $this->horario_fim,
-                'servicos' => $this->servicos,
-                'extras' => $this->extras,
-                'locais_atendimento' => $this->locais_atendimento,
-                'formas_pagamento' => $this->formas_pagamento,
-                'linguas' => $this->linguas,
-                'atende' => $this->atende,
-            ];
-
-            // Remove user_id do array de dados se estiver editando
-            if ($this->isEditing) {
-                // Não inclui o user_id nos dados de atualização
-                unset($data['user_id']);
-            } else {
-                // Apenas inclui user_id para novos anúncios
-                $data['user_id'] = auth()->id();
-            }
+            $data['user_id'] = auth()->id();
 
             // Upload da foto principal
-            if ($this->foto_principal) {
+            if ($this->foto_principal && !is_string($this->foto_principal)) {
                 if ($this->isEditing && $this->currentAnuncio->foto_principal) {
                     Storage::disk('public')->delete($this->currentAnuncio->foto_principal);
                 }
                 $data['foto_principal'] = $this->foto_principal->store('anuncios/fotos', 'public');
+            } elseif ($this->isEditing) {
+                // Mantém a foto principal existente removendo-a dos dados a serem atualizados
+                unset($data['foto_principal']);
             }
 
             if ($this->isEditing) {
@@ -276,8 +248,10 @@ class GerenciarAnuncios extends Component
                     // Upload dos novos vídeos
                     if ($this->videos) {
                         foreach ($this->videos as $video) {
+                            $videoPath = $video->store('anuncios/videos', 'public');
+                            
                             $anuncio->videos()->create([
-                                'path' => $video->store('anuncios/videos', 'public')
+                                'path' => $videoPath
                             ]);
                         }
                     }
@@ -300,8 +274,10 @@ class GerenciarAnuncios extends Component
                     // Upload dos vídeos
                     if ($this->videos) {
                         foreach ($this->videos as $video) {
+                            $videoPath = $video->store('anuncios/videos', 'public');
+                            
                             $anuncio->videos()->create([
-                                'path' => $video->store('anuncios/videos', 'public')
+                                'path' => $videoPath
                             ]);
                         }
                     }
