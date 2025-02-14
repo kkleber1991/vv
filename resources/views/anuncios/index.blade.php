@@ -1,28 +1,6 @@
 <x-frontend-layout>
     <div class="pt-8 pb-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Slots de Anúncios e Boosts -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Slot para Ads -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
-                        <span class="text-gray-500 dark:text-gray-400">Espaço Publicitário</span>
-                    </div>
-                </div>
-
-                <!-- Slots para Boosts -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
-                        <span class="text-gray-500 dark:text-gray-400">Boost 1</span>
-                    </div>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-                    <div class="bg-gray-100 dark:bg-gray-700 rounded-lg h-[200px] flex items-center justify-center">
-                        <span class="text-gray-500 dark:text-gray-400">Boost 2</span>
-                    </div>
-                </div>
-            </div>
 
             <!-- Header com Filtros -->
             <div class="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">

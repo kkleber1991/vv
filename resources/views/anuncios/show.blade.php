@@ -40,7 +40,9 @@
                                 <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Galeria de Fotos</h3>
                                 <button 
                                     @click="$dispatch('open-video-lightbox')"
-                                    class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md transition">
+                                    @if($anuncio->videos->count() == 0) disabled @endif
+                                    class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-md transition 
+                                           @if($anuncio->videos->count() == 0) opacity-50 cursor-not-allowed @endif">
                                     Ver vídeos
                                 </button>
                             </div>
@@ -297,7 +299,28 @@
         @keydown.escape.window="isOpen = false"
         @open-video-lightbox.window="openVideoLightbox()"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
-        <div class="relative w-full h-full max-w-6xl mx-auto flex flex-col">
+        
+        <!-- Modal para quando não há vídeos -->
+        <div 
+            x-show="!hasVideos" 
+            x-cloak 
+            class="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-md text-center">
+            <svg class="w-16 h-16 text-gray-400 dark:text-gray-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Sem Vídeos</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">
+                Este anúncio não possui vídeos disponíveis no momento.
+            </p>
+            <button 
+                @click="isOpen = false" 
+                class="bg-primary hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg transition">
+                Fechar
+            </button>
+        </div>
+
+        <!-- Conteúdo existente do lightbox de vídeos (mostrado apenas se houver vídeos) -->
+        <div x-show="hasVideos" class="relative w-full h-full max-w-6xl mx-auto flex flex-col">
             <!-- Vídeo Principal -->
             <div class="flex-grow flex items-center justify-center mb-4">
                 <video id="mainVideoPlayer" controls class="max-w-full max-h-[80vh] object-contain">
@@ -482,8 +505,18 @@
                 isOpen: false,
                 currentVideoIndex: 0,
                 swiper: null,
+                hasVideos: false,
                 openVideoLightbox() {
+                    const thumbnails = document.querySelectorAll('.videoLightboxSwiper .swiper-slide');
+                    
+                    // Verifica se há vídeos disponíveis
+                    this.hasVideos = thumbnails.length > 0;
                     this.isOpen = true;
+                    
+                    // Se não houver vídeos, para a execução aqui
+                    if (!this.hasVideos) {
+                        return;
+                    }
                     
                     // Aguarda o Swiper ser inicializado
                     this.$nextTick(() => {
