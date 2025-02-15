@@ -1,0 +1,14 @@
+[project]
+name = "LaravelApp"
+language = "php"
+
+[env]
+PORT = "80"  # Porta que será usada para expor o servidor
+
+[build]
+# Se o .env não existir, copia o .env.example; depois instala dependências e executa tarefas do Laravel.
+command = "if [ ! -f .env ]; then cp .env.example .env; fi && composer install && npm install && npm run build && php artisan key:generate && php artisan migrate"
+
+[run]
+# Inicia o servidor Laravel na porta definida na variável de ambiente PORT
+command = "php artisan serve --host=0.0.0.0 --port=$PORT"
