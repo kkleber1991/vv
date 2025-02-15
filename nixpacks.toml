@@ -1,12 +1,31 @@
-[project]
-name = "LaravelApp"
-languages = { php = "8.3", node = "20" }
+[phases.setup]
+nixPkgs = ['php83', 'nodejs-20_x', 'sqlite', 'git']
 
-[env]
+[phases.install]
+cmds = [
+    'cp .env.example .env',
+    'composer install',
+    'composer dump-autoload',
+    'npm install'
+]
+
+[phases.build]
+cmds = [
+    'npm run build',
+    'touch database/database.sqlite',
+    'chmod -R 777 .',
+    'chmod 777 database/database.sqlite',
+    'chmod -R 777 database',
+    'php artisan key:generate',
+    'php artisan migrate --force'
+]
+
+[start]
+cmd = 'php artisan serve --host=0.0.0.0 --port=${PORT:-80}'
+
+[variables]
 PORT = "80"
-
-[build]
-command = "if [ ! -f .env ]; then cp .env.example .env; fi && if [ ! -f database/database.sqlite ]; then mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite; fi && composer install --optimize-autoloader --no-dev && npm install && npm run build && php artisan key:generate && php artisan migrate --force"
-
-[run]
-command = "php artisan serve --host=0.0.0.0 --port=$PORT"
+APP_ENV = "production"
+APP_DEBUG = "false"
+DB_CONNECTION = "sqlite"
+DB_DATABASE = "/workspace/database/database.sqlite"
