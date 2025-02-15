@@ -9,6 +9,7 @@ nixPkgs = [
 
 [phases.install]
 cmds = [
+    'cp .env.example .env',
     'composer install --no-interaction --no-progress',
     'composer dump-autoload --optimize',
     'npm install'
@@ -20,6 +21,8 @@ cmds = [
     'mkdir -p /app/database',
     'touch /app/database/database.sqlite',
     'chmod 777 /app/database/database.sqlite',
+    'echo "DB_DATABASE=/app/database/database.sqlite" >> .env',
+    'php artisan key:generate --force',
     'php artisan migrate --force'
 ]
 
