@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs-20_x', 'sqlite', 'git']
+nixPkgs = ['php83', 'nodejs_20', 'sqlite', 'git']
 
 [phases.install]
 cmds = [
@@ -29,3 +29,7 @@ APP_ENV = "production"
 APP_DEBUG = "false"
 DB_CONNECTION = "sqlite"
 DB_DATABASE = "/workspace/database/database.sqlite"
+
+[environment]
+NODE_VERSION = "20"
+PHP_VERSION = "8.3"
