@@ -1,68 +1,79 @@
-# syntax=docker/dockerfile:1
-
-#################################
-# Etapa 1: Build dos assets com Node 20
-#################################
-FROM node:20 AS build-assets
+# Estágio de build
+FROM node:20-alpine AS node-builder
 WORKDIR /app
-
-# Copia os arquivos de dependências do Node e instala os pacotes
-COPY package.json package-lock.json ./
-RUN npm install
-
-# Copia todo o código da aplicação e executa o build dos assets de produção
+COPY package*.json ./
+RUN npm ci
 COPY . .
-RUN npm run production
+RUN npm run build
 
-#################################
-# Etapa 2: Imagem final com PHP 8.3-FPM
-#################################
-FROM php:8.3-fpm
+# Estágio de produção
+FROM php:8.3-fpm-alpine
 
-# Instala dependências do sistema e a extensão PDO_SQLITE
-RUN apt-get update && apt-get install -y \
-    git \
+# Instalação de dependências essenciais
+RUN apk add --no-cache \
+    zip \
     unzip \
-    sqlite3 \
-    libsqlite3-dev \
- && docker-php-ext-install pdo pdo_sqlite
+    git \
+    libpng-dev \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    freetype-dev \
+    libzip-dev \
+    sqlite-dev
 
-# Instala o Composer a partir da imagem oficial
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Instalação e configuração de extensões PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_sqlite \
+        gd \
+        zip \
+        bcmath \
+        opcache
 
+# Instalação do Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Configuração do diretório de trabalho
 WORKDIR /var/www/html
 
-# Copia os arquivos de dependências PHP e instala as dependências com Composer
-COPY composer.json composer.lock ./
-RUN composer install --no-dev --optimize-autoloader
-
-# Copia o restante do código da aplicação
+# Copia os arquivos do projeto
 COPY . .
+COPY --from=node-builder /app/public/build ./public/build
 
-# Substitui a pasta de assets pelo build realizado na etapa anterior
-COPY --from=build-assets /app/public ./public
+# Configuração das permissões
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 storage bootstrap/cache
 
-# Cria o diretório e o arquivo do banco SQLite (se ainda não existirem) e ajusta as permissões
-RUN mkdir -p database && touch database/database.sqlite && chown -R www-data:www-data /var/www/html
+# Instalação das dependências do Composer
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Expondo a porta 80 para a aplicação em produção
-EXPOSE 80
-
-# Define variáveis de ambiente para produção
+# Configuração do ambiente
 ENV APP_ENV=production
 ENV APP_DEBUG=false
 
-# Labels para integração com o Traefik (ajuste conforme sua configuração)
-LABEL traefik.enable="true"
-LABEL traefik.http.routers.laravel.rule="Host(example.com)"
-LABEL traefik.http.routers.laravel.entrypoints="web"
+# Criação do banco de dados SQLite
+RUN touch database/database.sqlite \
+    && chown www-data:www-data database/database.sqlite \
+    && chmod 664 database/database.sqlite
 
-# Copia o script de entrypoint e torna-o executável
-COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Configuração do Nginx
+COPY --from=nginx:alpine /etc/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Define o entrypoint que cuidará de executar as migrations antes de iniciar o serviço
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# Labels para Traefik
+LABEL traefik.enable=true
+LABEL traefik.http.routers.laravel.rule="Host(seu-dominio.com)"
+LABEL traefik.http.routers.laravel.entrypoints=web
+LABEL traefik.http.services.laravel.loadbalancer.server.port=80
 
-# Inicia o PHP-FPM usando a forma shell para CMD (evita problemas de parsing)
-CMD php-fpm
+# Executar migrations e otimizações
+RUN php artisan migrate --force \
+    && php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
+
+# Expor porta
+EXPOSE 80
+
+# Comando para iniciar
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=80"]
