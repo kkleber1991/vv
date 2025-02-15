@@ -18,11 +18,11 @@ cmds = [
 [phases.build]
 cmds = [
     'npm run build',
-    'mkdir -p database',
-    'touch database/database.sqlite',
-    'chmod -R 777 .',
-    'chmod 777 database/database.sqlite',
-    'chmod -R 777 database',
+    'mkdir -p /app/database',
+    'touch /app/database/database.sqlite',
+    'chmod -R 777 /app',
+    'chmod 777 /app/database/database.sqlite',
+    'echo "DB_DATABASE=/app/database/database.sqlite" >> .env',
     'php artisan key:generate --force',
     'php artisan migrate --force'
 ]
@@ -35,7 +35,7 @@ PORT = "80"
 APP_ENV = "production"
 APP_DEBUG = "false"
 DB_CONNECTION = "sqlite"
-DB_DATABASE = "/workspace/database/database.sqlite"
+DB_DATABASE = "/app/database/database.sqlite"
 
 [environment]
 NODE_VERSION = "20"
