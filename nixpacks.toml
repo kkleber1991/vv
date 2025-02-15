@@ -1,22 +1,29 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs', 'sqlite', 'git']
+nixPkgs = [
+    'php83',
+    'php83Packages.composer',
+    'nodejs',
+    'sqlite',
+    'git'
+]
 
 [phases.install]
 cmds = [
     'cp .env.example .env',
-    'composer install',
-    'composer dump-autoload',
+    'composer install --no-interaction --no-progress',
+    'composer dump-autoload --optimize',
     'npm install'
 ]
 
 [phases.build]
 cmds = [
     'npm run build',
+    'mkdir -p database',
     'touch database/database.sqlite',
     'chmod -R 777 .',
     'chmod 777 database/database.sqlite',
     'chmod -R 777 database',
-    'php artisan key:generate',
+    'php artisan key:generate --force',
     'php artisan migrate --force'
 ]
 
