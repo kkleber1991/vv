@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['php83', 'nodejs_20', 'sqlite', 'git']
+nixPkgs = ['php83', 'nodejs', 'sqlite', 'git']
 
 [phases.install]
 cmds = [
