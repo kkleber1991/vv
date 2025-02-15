@@ -88,8 +88,8 @@
                             @foreach($posts as $post)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $post->title }}</div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($post->excerpt, 50) }}</div>
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">{{ Str::limit($post->title, 80) }}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">{{ Str::limit($post->excerpt, 80) }}</div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $post->status === 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
