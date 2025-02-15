@@ -6,19 +6,7 @@ languages = { php = "8.3", node = "20" }
 PORT = "80"
 
 [build]
-# Etapas de build:
-# 1. Se não existir, copia .env.example para .env
-# 2. Cria o diretório "database" se necessário, cria o arquivo SQLite e define as permissões
-# 3. Instala as dependências do Composer (otimizando o autoloader e ignorando dev)
-# 4. Instala dependências Node e compila os assets
-# 5. Gera a chave do Laravel e executa as migrações forçadas
-command = "if [ ! -f .env ]; then cp .env.example .env; fi && \
-           if [ ! -f database/database.sqlite ]; then mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite; fi && \
-           composer install --optimize-autoloader --no-dev && \
-           npm install && npm run build && \
-           php artisan key:generate && \
-           php artisan migrate --force"
+command = "if [ ! -f .env ]; then cp .env.example .env; fi && if [ ! -f database/database.sqlite ]; then mkdir -p database && touch database/database.sqlite && chmod 777 database/database.sqlite; fi && composer install --optimize-autoloader --no-dev && npm install && npm run build && php artisan key:generate && php artisan migrate --force"
 
 [run]
-# Inicia o servidor Laravel na porta definida na variável PORT
 command = "php artisan serve --host=0.0.0.0 --port=$PORT"
